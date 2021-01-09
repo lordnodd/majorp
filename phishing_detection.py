@@ -20,6 +20,7 @@ def getResult(url):
     clf = rfc()
     clf.fit(X_train, y_train)
     score = clf.score(X_test, y_test)
+    print(score*100)
     
     #joblib.dump(clf, "randomForest.pkl")
 

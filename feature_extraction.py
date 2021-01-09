@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 import socket
 import requests
 from googlesearch import search
-#import whois
+import whois
 from datetime import datetime
 import time
 from dateutil.parser import parse as date_parse
@@ -16,7 +16,7 @@ def diff_month(d1, d2):
 
 # Generate data set by extracting the features from the URL
 def generate_data_set(url):
-
+    count=0
     data_set = []
 
     # Converts the given URL into standard format
@@ -39,7 +39,7 @@ def generate_data_set(url):
 	       domain = domain.replace("www.","")
 
     # Requests all the information about the domain
-    # whois_response = whois.query(domain)
+    whois_response = whois.query(domain)
 
     rank_checker_response = requests.post("https://www.checkpagerank.net/index.php", {
         "name": domain
@@ -57,6 +57,9 @@ def generate_data_set(url):
         data_set.append(-1)
     except:
         data_set.append(1)
+    
+    print(count,data_set[count])
+    count+=1
 
     # 2.URL_Length
     if len(url) < 54:
@@ -65,6 +68,9 @@ def generate_data_set(url):
         data_set.append(0)
     else:
         data_set.append(-1)
+
+    print(count,data_set[count])
+    count+=1
 
     # 3.Shortining_Service
     match=re.search('bit\.ly|goo\.gl|shorte\.st|go2l\.ink|x\.co|ow\.ly|t\.co|tinyurl|tr\.im|is\.gd|cli\.gs|'
@@ -78,6 +84,8 @@ def generate_data_set(url):
         data_set.append(-1)
     else:
         data_set.append(1)
+    print(count,data_set[count])
+    count+=1
 
     # 4.having_At_Symbol
     if re.findall("@", url):
@@ -91,6 +99,8 @@ def generate_data_set(url):
         data_set.append(-1)
     else:
         data_set.append(1)
+    print(count,data_set[count])
+    count+=1
 
     # 6.Prefix_Suffix
     if re.findall(r"https?://[^\-]+-[^\-]+/", url):
@@ -105,6 +115,8 @@ def generate_data_set(url):
         data_set.append(0)
     else:
         data_set.append(-1)
+    print(count,data_set[count])
+    count+=1
 
     # 8.SSLfinal_State
     try:
@@ -112,7 +124,8 @@ def generate_data_set(url):
             data_set.append(1)
     except:
         data_set.append(-1)
-
+    print(count,data_set[count])
+    count+=1
     # 9.Domain_registeration_length
     # expiration_date = whois_response.expiration_date
     # registration_length = 0
@@ -128,7 +141,10 @@ def generate_data_set(url):
     #         data_set.append(1)
     # except:
     #     data_set.append(-1)
-    data_set.append(1)
+    data_set.append(-1)
+    print(count,data_set[count])
+    count+=1
+
     # 10.Favicon
     if soup == -999:
         data_set.append(-1)
@@ -145,7 +161,9 @@ def generate_data_set(url):
                         raise StopIteration
         except StopIteration:
             pass
-
+    print(count,data_set[count])
+    count+=1
+    
     #11. port
     try:
         port = domain.split(":")[1]
@@ -155,13 +173,18 @@ def generate_data_set(url):
             data_set.append(1)
     except:
         data_set.append(1)
-
+    print(count,data_set[count])
+    count+=1
+    
     #12. HTTPS_token
     if re.findall(r"^https://", url):
         data_set.append(1)
     else:
         data_set.append(-1)
-
+    
+    print(count,data_set[count])
+    count+=1
+    
     #13. Request_URL
     i = 0
     success = 0
@@ -202,7 +225,9 @@ def generate_data_set(url):
               data_set.append(-1)
         except:
             data_set.append(1)
-
+    print(count,data_set[count])
+    count+=1
+    
 
 
     #14. URL_of_Anchor
@@ -231,12 +256,16 @@ def generate_data_set(url):
             data_set.append(0)
         else:
             data_set.append(-1)
-
+    print(count,data_set[count])
+    count+=1
+    
     #15. Links_in_tags
     i=0
     success =0
     if soup == -999:
         data_set.append(-1)
+        print(count,data_set[count])
+        count+=1
     else:
         for link in soup.find_all('link', href= True):
            dots=[x.start(0) for x in re.finditer('\.',link['href'])]
@@ -260,7 +289,10 @@ def generate_data_set(url):
            data_set.append(0)
         else :
            data_set.append(-1)
-
+        print(count,data_set[count])
+        count+=1
+    
+    
         #16. SFH
         for form in soup.find_all('form', action= True):
            if form['action'] =="" or form['action'] == "about:blank" :
@@ -272,6 +304,9 @@ def generate_data_set(url):
            else:
                  data_set.append(1)
                  break
+        print(count,data_set[count])
+        count+=1
+    
 
     #17. Submitting_to_email
     if response == "":
@@ -281,7 +316,9 @@ def generate_data_set(url):
             data_set.append(1)
         else:
             data_set.append(-1)
-
+    print(count,data_set[count])
+    count+=1
+    
     #18. Abnormal_URL
     if response == "":
         data_set.append(-1)
@@ -290,7 +327,9 @@ def generate_data_set(url):
             data_set.append(1)
         else:
             data_set.append(-1)
-
+    print(count,data_set[count])
+    count+=1
+    
     #19. Redirect
     if response == "":
         data_set.append(-1)
@@ -301,7 +340,9 @@ def generate_data_set(url):
             data_set.append(0)
         else:
             data_set.append(1)
-
+    print(count,data_set[count])
+    count+=1
+    
     #20. on_mouseover
     if response == "" :
         data_set.append(-1)
@@ -310,7 +351,9 @@ def generate_data_set(url):
             data_set.append(1)
         else:
             data_set.append(-1)
-
+    print(count,data_set[count])
+    count+=1
+    
     #21. RightClick
     if response == "":
         data_set.append(-1)
@@ -319,7 +362,9 @@ def generate_data_set(url):
             data_set.append(1)
         else:
             data_set.append(-1)
-
+    print(count,data_set[count])
+    count+=1
+    
     #22. popUpWidnow
     if response == "":
         data_set.append(-1)
@@ -328,7 +373,9 @@ def generate_data_set(url):
             data_set.append(1)
         else:
             data_set.append(-1)
-
+    print(count,data_set[count])
+    count+=1
+    
     #23. Iframe
     if response == "":
         data_set.append(-1)
@@ -337,7 +384,9 @@ def generate_data_set(url):
             data_set.append(1)
         else:
             data_set.append(-1)
-
+    print(count,data_set[count])
+    count+=1
+    
     #24. age_of_domain
     if response == "":
         data_set.append(-1)
@@ -351,7 +400,9 @@ def generate_data_set(url):
                 data_set.append(1)
         except:
             data_set.append(1)
-
+    print(count,data_set[count])
+    count+=1
+    
     #25. DNSRecord
     dns = 1
     try:
@@ -365,7 +416,9 @@ def generate_data_set(url):
             data_set.append(-1)
         else:
             data_set.append(1)
-
+    print(count,data_set[count])
+    count+=1
+    
     #26. web_traffic
     try:
         rank = BeautifulSoup(urllib.request.urlopen("http://data.alexa.com/data?cli=10&dat=s&url=" + url).read(), "xml").find("REACH")['RANK']
@@ -376,7 +429,9 @@ def generate_data_set(url):
             data_set.append(0)
     except TypeError:
         data_set.append(-1)
-
+    print(count,data_set[count])
+    count+=1
+    
     #27. Page_Rank
     try:
         if global_rank > 0 and global_rank < 100000:
@@ -385,14 +440,18 @@ def generate_data_set(url):
             data_set.append(1)
     except:
         data_set.append(1)
-
+    print(count,data_set[count])
+    count+=1
+    
     #28. Google_Index
     site=search(url, 5)
     if site:
         data_set.append(1)
     else:
         data_set.append(-1)
-
+    print(count,data_set[count])
+    count+=1
+    
     #29. Links_pointing_to_page
     if response == "":
         data_set.append(-1)
@@ -404,7 +463,9 @@ def generate_data_set(url):
             data_set.append(0)
         else:
             data_set.append(-1)
-
+    print(count,data_set[count])
+    count+=1
+    
     #30. Statistical_report
     url_match=re.search('at\.ua|usa\.cc|baltazarpresentes\.com\.br|pe\.hu|esy\.es|hol\.es|sweddy\.com|myjino\.ru|96\.lt|ow\.ly',url)
     try:
@@ -423,7 +484,9 @@ def generate_data_set(url):
             data_set.append(1)
     except:
         print ('Connection problem. Please check your internet connection!')
+    print(count,data_set[count])
+    count+=1
+    
 
-
-    print (data_set)
+    print (data_set,len(data_set))
     return data_set
