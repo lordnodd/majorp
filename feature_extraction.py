@@ -58,8 +58,8 @@ def generate_data_set(url):
     except:
         data_set.append(1)
     
-    print(count,data_set[count])
-    count+=1
+    print("having_IP_Address",data_set[-1])
+    
 
     # 2.URL_Length
     if len(url) < 54:
@@ -69,8 +69,8 @@ def generate_data_set(url):
     else:
         data_set.append(-1)
 
-    print(count,data_set[count])
-    count+=1
+    print("URL_Length",data_set[-1])
+    
 
     # 3.Shortining_Service
     match=re.search('bit\.ly|goo\.gl|shorte\.st|go2l\.ink|x\.co|ow\.ly|t\.co|tinyurl|tr\.im|is\.gd|cli\.gs|'
@@ -84,30 +84,32 @@ def generate_data_set(url):
         data_set.append(-1)
     else:
         data_set.append(1)
-    print(count,data_set[count])
-    count+=1
+    print('Shortining_Service',data_set[-1])
+    
 
     # 4.having_At_Symbol
     if re.findall("@", url):
         data_set.append(-1)
     else:
         data_set.append(1)
-
+    print("having_At_Symbol",data_set[-1])
+    
     # 5.double_slash_redirecting
     list=[x.start(0) for x in re.finditer('//', url)]
     if list[len(list)-1]>6:
         data_set.append(-1)
     else:
         data_set.append(1)
-    print(count,data_set[count])
-    count+=1
+    print('double_slash_redirecting',data_set[-1])
+    
 
     # 6.Prefix_Suffix
     if re.findall(r"https?://[^\-]+-[^\-]+/", url):
         data_set.append(-1)
     else:
         data_set.append(1)
-
+    print('Prefix_Suffix',data_set[-1])
+    
     # 7.having_Sub_Domain
     if len(re.findall("\.", url)) == 1:
         data_set.append(1)
@@ -115,8 +117,8 @@ def generate_data_set(url):
         data_set.append(0)
     else:
         data_set.append(-1)
-    print(count,data_set[count])
-    count+=1
+    print('having_Sub_Domain',data_set[-1])
+    
 
     # 8.SSLfinal_State
     try:
@@ -124,26 +126,26 @@ def generate_data_set(url):
             data_set.append(1)
     except:
         data_set.append(-1)
-    print(count,data_set[count])
-    count+=1
+    print('SSLfinal_State',data_set[-1])
+    
     # 9.Domain_registeration_length
-    # expiration_date = whois_response.expiration_date
-    # registration_length = 0
-    # try:
-    #     expiration_date = min(expiration_date)
-    #     today = time.strftime('%Y-%m-%d')
-    #     today = datetime.strptime(today, '%Y-%m-%d')
-    #     registration_length = abs((expiration_date - today).days)
+    expiration_date = whois_response.expiration_date
+    registration_length = 0
+    try:
+        expiration_date = min(expiration_date)
+        today = time.strftime('%Y-%m-%d')
+        today = datetime.strptime(today, '%Y-%m-%d')
+        registration_length = abs((expiration_date - today).days)
 
-    #     if registration_length / 365 <= 1:
-    #         data_set.append(-1)
-    #     else:
-    #         data_set.append(1)
-    # except:
-    #     data_set.append(-1)
-    data_set.append(-1)
-    print(count,data_set[count])
-    count+=1
+        if registration_length / 365 <= 1:
+            data_set.append(-1)
+        else:
+            data_set.append(1)
+    except:
+        data_set.append(-1)
+    # data_set.append(-1)
+    print('Domain_registeration_length',data_set[-1])
+    
 
     # 10.Favicon
     if soup == -999:
@@ -161,8 +163,8 @@ def generate_data_set(url):
                         raise StopIteration
         except StopIteration:
             pass
-    print(count,data_set[count])
-    count+=1
+    print('Favicon',data_set[-1])
+    
     
     #11. port
     try:
@@ -173,8 +175,8 @@ def generate_data_set(url):
             data_set.append(1)
     except:
         data_set.append(1)
-    print(count,data_set[count])
-    count+=1
+    print('port',data_set[-1])
+    
     
     #12. HTTPS_token
     if re.findall(r"^https://", url):
@@ -182,8 +184,8 @@ def generate_data_set(url):
     else:
         data_set.append(-1)
     
-    print(count,data_set[count])
-    count+=1
+    print('HTTPS_token',data_set[-1])
+    
     
     #13. Request_URL
     i = 0
@@ -225,9 +227,9 @@ def generate_data_set(url):
               data_set.append(-1)
         except:
             data_set.append(1)
-    print(count,data_set[count])
-    count+=1
     
+    print('Request_URL',data_set[-1])
+       
 
 
     #14. URL_of_Anchor
@@ -256,16 +258,16 @@ def generate_data_set(url):
             data_set.append(0)
         else:
             data_set.append(-1)
-    print(count,data_set[count])
-    count+=1
+    print('URL_of_Anchor',data_set[-1])
+    
     
     #15. Links_in_tags
     i=0
     success =0
     if soup == -999:
         data_set.append(-1)
-        print(count,data_set[count])
-        count+=1
+        print('Links_in_tags',data_set[-1])
+        
     else:
         for link in soup.find_all('link', href= True):
            dots=[x.start(0) for x in re.finditer('\.',link['href'])]
@@ -289,8 +291,8 @@ def generate_data_set(url):
            data_set.append(0)
         else :
            data_set.append(-1)
-        print(count,data_set[count])
-        count+=1
+        print('Links_in_tags',data_set[-1])
+        
     
     
         #16. SFH
@@ -304,8 +306,8 @@ def generate_data_set(url):
            else:
                  data_set.append(1)
                  break
-        print(count,data_set[count])
-        count+=1
+        print('SFH',data_set[-1])
+        
     
 
     #17. Submitting_to_email
@@ -316,8 +318,8 @@ def generate_data_set(url):
             data_set.append(1)
         else:
             data_set.append(-1)
-    print(count,data_set[count])
-    count+=1
+    print('Submitting_to_email',data_set[-1])
+    
     
     #18. Abnormal_URL
     if response == "":
@@ -327,8 +329,8 @@ def generate_data_set(url):
             data_set.append(1)
         else:
             data_set.append(-1)
-    print(count,data_set[count])
-    count+=1
+    print('Abnormal_URL',data_set[-1])
+    
     
     #19. Redirect
     if response == "":
@@ -340,8 +342,8 @@ def generate_data_set(url):
             data_set.append(0)
         else:
             data_set.append(1)
-    print(count,data_set[count])
-    count+=1
+    print('Redirect',data_set[-1])
+    
     
     #20. on_mouseover
     if response == "" :
@@ -351,8 +353,8 @@ def generate_data_set(url):
             data_set.append(1)
         else:
             data_set.append(-1)
-    print(count,data_set[count])
-    count+=1
+    print('on_mouseover',data_set[-1])
+    
     
     #21. RightClick
     if response == "":
@@ -362,8 +364,8 @@ def generate_data_set(url):
             data_set.append(1)
         else:
             data_set.append(-1)
-    print(count,data_set[count])
-    count+=1
+    print('RightClick',data_set[-1])
+    
     
     #22. popUpWidnow
     if response == "":
@@ -373,8 +375,8 @@ def generate_data_set(url):
             data_set.append(1)
         else:
             data_set.append(-1)
-    print(count,data_set[count])
-    count+=1
+    print('popUpWidnow',data_set[-1])
+    
     
     #23. Iframe
     if response == "":
@@ -384,8 +386,8 @@ def generate_data_set(url):
             data_set.append(1)
         else:
             data_set.append(-1)
-    print(count,data_set[count])
-    count+=1
+    print('Iframe',data_set[-1])
+    
     
     #24. age_of_domain
     if response == "":
@@ -400,8 +402,8 @@ def generate_data_set(url):
                 data_set.append(1)
         except:
             data_set.append(1)
-    print(count,data_set[count])
-    count+=1
+    print('age_of_domain',data_set[-1])
+    
     
     #25. DNSRecord
     dns = 1
@@ -416,8 +418,8 @@ def generate_data_set(url):
             data_set.append(-1)
         else:
             data_set.append(1)
-    print(count,data_set[count])
-    count+=1
+    print('DNSRecord',data_set[-1])
+    
     
     #26. web_traffic
     try:
@@ -429,8 +431,8 @@ def generate_data_set(url):
             data_set.append(0)
     except TypeError:
         data_set.append(-1)
-    print(count,data_set[count])
-    count+=1
+    print('web_traffic',data_set[-1])
+    
     
     #27. Page_Rank
     try:
@@ -440,8 +442,8 @@ def generate_data_set(url):
             data_set.append(1)
     except:
         data_set.append(1)
-    print(count,data_set[count])
-    count+=1
+    print('Page_Rank',data_set[-1])
+    
     
     #28. Google_Index
     site=search(url, 5)
@@ -449,8 +451,8 @@ def generate_data_set(url):
         data_set.append(1)
     else:
         data_set.append(-1)
-    print(count,data_set[count])
-    count+=1
+    print('Google_Index',data_set[-1])
+    
     
     #29. Links_pointing_to_page
     if response == "":
@@ -463,8 +465,8 @@ def generate_data_set(url):
             data_set.append(0)
         else:
             data_set.append(-1)
-    print(count,data_set[count])
-    count+=1
+    print('Links_pointing_to_page',data_set[-1])
+    
     
     #30. Statistical_report
     url_match=re.search('at\.ua|usa\.cc|baltazarpresentes\.com\.br|pe\.hu|esy\.es|hol\.es|sweddy\.com|myjino\.ru|96\.lt|ow\.ly',url)
@@ -484,8 +486,8 @@ def generate_data_set(url):
             data_set.append(1)
     except:
         print ('Connection problem. Please check your internet connection!')
-    print(count,data_set[count])
-    count+=1
+    print('Statistical_report',data_set[-1])
+    
     
 
     print (data_set,len(data_set))
